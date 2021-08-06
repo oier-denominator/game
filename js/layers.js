@@ -1,4 +1,5 @@
 const D=_=>{return new Decimal(_)}
+let g = (layer,id)=>{return getBuyableAmount(layer,id)}
 addLayer("m", {
     name: "mods", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "M", // This appears on the layer's node. Default is the id with the first letter capitalized
@@ -116,5 +117,62 @@ addLayer("u", {
       cost: D(1),
       unlocked(){return hasUpgrade("u",14)}
     },
+    21:{
+      title:"Features",
+      description:"Unlock the ability to create new features",
+      cost: D(2),
+      unlocked(){return hasUpgrade("u",15)}
+    },
+    22:{
+      title:"Modders",
+      description:"Unlock a new layer which allows you to get people to help you make mods",
+      cost: D(2),
+      unlocked(){return hasUpgrade("u",21)}
+    },
+  },
+  buyables: {
+    11: {
+        cost(x=getBuyableAmount(this.layer,this.id)) { return new Decimal(4).pow(x.add(1)) },
+      title: "Feature development",
+        display() { return "Spend "+format(getBuyableAmount(this.layer,this.id))+" seconds developing a new feature, increasing the number of mods by x"+format(this.effect())+".\nYou have "+format(g(this.layer,this.id))+" features"},
+      effect(){return D(1.1).pow(g(this.layer,this.id))},
+        canAfford() { return player[this.layer].points.gte(this.cost()) },
+        buy() {
+            player[this.layer].points = player[this.layer].points.sub(this.cost())
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+        },
+    },
+}
+})
+addLayer("c", {
+    name: "creators", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "C", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    startData() { return {
+        unlocked: false,
+		points: new Decimal(0),
+    }},
+    color: "#eaea56",
+    requires: new Decimal(300), // Can be a function that takes requirement increases into account
+    resource: "mod creators", // Name of prestige currency
+    baseResource: "seconds of developing", // Name of resource prestige is based on
+    baseAmount() {return player.points}, // Get the current amount of baseResource
+  effect(){return player.c.points.add(1)},
+  effectDescription(){return "Multiplying developing speed by "+format(this.effect())},
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    exponent: 1, // Prestige currency exponent
+    gainMult() { // Calculate the multiplier for main currency from bonuses
+        mult = new Decimal(1)
+        return mult
+    },
+    gainExp() { // Calculate the exponent on main currency from bonuses
+        return new Decimal(1)
+    },
+    row: 0, // Row the layer is in on the tree (0 is the first row)
+    hotkeys: [
+        {key: "c", description: "C: Reset for mod creators", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    layerShown(){return hasUpgrade("m",22)},
+  upgrades:{
   }
 })

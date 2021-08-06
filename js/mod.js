@@ -13,8 +13,8 @@ let modInfo = {
 
 // Set your version in num and name
 let VERSION = {
-	num: "0.1",
-	name: "first version",
+	num: "0.1.1",
+	name: "",
 }
 
 let changelog = "You found an easter egg!"
@@ -47,6 +47,7 @@ function getPointGen() {
   if(hasUpgrade("u",13))gain=gain.mul(player.m.points.root(3).add(1))
   if(hasUpgrade("u",14))gain=gain.mul(2)
   if(hasUpgrade("u",15))gain=gain.mul(2)
+  if(player.c.unlocked)gain=gain.mul(tmp.c.effect)
 	return gain
 }
 
@@ -60,7 +61,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return hasUpgrade("u",15)
+	return false
 }
 
 
