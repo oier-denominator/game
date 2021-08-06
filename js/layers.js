@@ -69,6 +69,7 @@ addLayer("u", {
 		points: new Decimal(0),
     }},
     color: "#bdc134",
+  branches: ["m","c"],
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
     resource: "updates", // Name of prestige currency
     baseResource: "mods", // Name of resource prestige is based on
@@ -131,10 +132,10 @@ addLayer("u", {
     },
   },
   buyables: {
-    11: {
+    11: {unlocked(){return hasUpgrade("u",21)},
         cost(x=getBuyableAmount(this.layer,this.id)) { return new Decimal(4).pow(x.add(1)) },
       title: "Feature development",
-        display() { return "Spend "+format(getBuyableAmount(this.layer,this.id))+" seconds developing a new feature, increasing the number of mods by x"+format(this.effect())+".\nYou have "+format(g(this.layer,this.id))+" features"},
+        display() { return "Spend "+format(this.cost())+" updates developing a new feature, increasing the number of mods by x"+format(this.effect())+".\nYou have "+format(g(this.layer,this.id))+" features"},
       effect(){return D(1.1).pow(g(this.layer,this.id))},
         canAfford() { return player[this.layer].points.gte(this.cost()) },
         buy() {
@@ -172,7 +173,7 @@ addLayer("c", {
     hotkeys: [
         {key: "c", description: "C: Reset for mod creators", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return hasUpgrade("m",22)},
+    layerShown(){return hasUpgrade("u",22)},
   upgrades:{
   }
 })
