@@ -48,6 +48,7 @@ function getPointGen() {
   if(hasUpgrade("u",14))gain=gain.mul(2)
   if(hasUpgrade("u",15))gain=gain.mul(2)
   if(player.c.unlocked)gain=gain.mul(tmp.c.effect)
+  if(hasUpgrade("u",22))gain=gain.add(1)
 	return gain
 }
 

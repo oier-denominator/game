@@ -126,7 +126,7 @@ addLayer("u", {
     },
     22:{
       title:"Modders",
-      description:"Unlock a new layer which allows you to get people to help you make mods",
+      description:"Unlock a new layer which allows you to get people to help you make mods, and add 1 to point gain",
       cost: D(2),
       unlocked(){return hasUpgrade("u",21)}
     },
