@@ -49,7 +49,7 @@ function getPointGen() {
   if(hasUpgrade("u",15))gain=gain.mul(2)
   if(player.c.unlocked)gain=gain.mul(tmp.c.effect)
   if(hasUpgrade("u",22))gain=gain.add(1)
-	return gain
+	return gain.max(1)
 }
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
